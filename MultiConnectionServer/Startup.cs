@@ -45,6 +45,8 @@ namespace MultiConnectionServer
 
                app.UseRouting();
 
+               app.UseCors(x => x.AllowAnyOrigin());
+
                app.UseAuthorization();
 
                app.UseEndpoints(endpoints =>

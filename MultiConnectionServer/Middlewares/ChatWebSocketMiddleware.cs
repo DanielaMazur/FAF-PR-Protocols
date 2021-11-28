@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MultiConnectionServer.Services;
 using System;
-using System.Collections.Concurrent;
-using System.IO;
 using System.Net.WebSockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,13 +9,13 @@ namespace MultiConnectionServer.Middlewares
 {
      public class ChatWebSocketMiddleware
      {
-          private static readonly ConcurrentDictionary<string, WebSocket> _sockets = new();
-
           private readonly RequestDelegate _next;
+          private readonly ChatRoomSocketService _chatRoomSocketService;
 
           public ChatWebSocketMiddleware(RequestDelegate next)
           {
                _next = next;
+               _chatRoomSocketService = new ChatRoomSocketService();
           }
 
           public async Task Invoke(HttpContext context)
@@ -30,60 +28,23 @@ namespace MultiConnectionServer.Middlewares
 
                CancellationToken ct = context.RequestAborted;
                WebSocket currentSocket = await context.WebSockets.AcceptWebSocketAsync();
+               var roomName = context.Request.Path.ToString().Remove(0, 1);
                var socketId = Guid.NewGuid().ToString();
 
-               _sockets.TryAdd(socketId, currentSocket);
+               _chatRoomSocketService.AddSocketToRoom(currentSocket, socketId, roomName);
 
                while (true)
                {
                     if (ct.IsCancellationRequested) break;
 
-                    var response = await ReceiveStringAsync(currentSocket, ct);
-                    if (string.IsNullOrEmpty(response))
-                    {
-                         if (currentSocket.State != WebSocketState.Open) break;
-                         continue;
-                    }
-
-                    foreach (var socket in _sockets)
-                    {
-                         if (socket.Value.State != WebSocketState.Open) continue;
-                         await SendStringAsync(socket.Value, response, ct);
-                    }
+                    var exit = await _chatRoomSocketService.SendMessagesToAllRoomParticipantsAsync(currentSocket, roomName, ct);
+                    if (exit) break;
                }
 
-               _sockets.TryRemove(socketId, out _);
+               _chatRoomSocketService.RemoveSocketFromRoom(socketId, roomName);
 
                await currentSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", ct);
                currentSocket.Dispose();
-          }
-
-          private static Task SendStringAsync(WebSocket socket, string data, CancellationToken ct = default)
-          {
-               var buffer = Encoding.UTF8.GetBytes(data);
-               var segment = new ArraySegment<byte>(buffer);
-               return socket.SendAsync(segment, WebSocketMessageType.Text, true, ct);
-          }
-
-          private static async Task<string> ReceiveStringAsync(WebSocket socket, CancellationToken ct = default)
-          {
-               var buffer = new ArraySegment<byte>(new byte[8192]);
-               using var ms = new MemoryStream();
-               WebSocketReceiveResult result;
-               do
-               {
-                    ct.ThrowIfCancellationRequested();
-
-                    result = await socket.ReceiveAsync(buffer, ct);
-                    ms.Write(buffer.Array, buffer.Offset, result.Count);
-               }
-               while (!result.EndOfMessage);
-
-               ms.Seek(0, SeekOrigin.Begin);
-               if (result.MessageType != WebSocketMessageType.Text) return null;
-
-               using var reader = new StreamReader(ms, Encoding.UTF8);
-               return await reader.ReadToEndAsync();
           }
      }
 }
