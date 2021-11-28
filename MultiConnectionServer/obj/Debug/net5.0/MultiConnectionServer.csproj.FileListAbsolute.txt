@@ -11,7 +11,6 @@ C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionSe
 C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionServer\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionServer\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionServer\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionServer\obj\Debug\net5.0\MultiConnectionServer.csproj.AssemblyReference.cache
 C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionServer\obj\Debug\net5.0\MultiConnectionServer.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionServer\obj\Debug\net5.0\MultiConnectionServer.AssemblyInfoInputs.cache
 C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionServer\obj\Debug\net5.0\MultiConnectionServer.AssemblyInfo.cs
@@ -27,3 +26,4 @@ C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionSe
 C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionServer\obj\Debug\net5.0\ref\MultiConnectionServer.dll
 C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionServer\obj\Debug\net5.0\MultiConnectionServer.pdb
 C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionServer\obj\Debug\net5.0\MultiConnectionServer.genruntimeconfig.cache
+C:\Users\user\Desktop\FAF-3\PR\Protocols\MultiConnectionServer\MultiConnectionServer\obj\Debug\net5.0\MultiConnectionServer.csproj.AssemblyReference.cache
