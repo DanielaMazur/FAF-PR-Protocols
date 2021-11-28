@@ -40,6 +40,9 @@ namespace MultiConnectionServer
 
                app.UseHttpsRedirection();
 
+               app.UseWebSockets();
+               app.UseMiddleware<ChatWebSocketMiddleware>();
+
                app.UseRouting();
 
                app.UseAuthorization();
