@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MultiConnectionServer.Entities;
 using System;
-using System.Collections.Generic;
+using OpenPop.Pop3;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
@@ -33,11 +33,31 @@ namespace MultiConnectionServer.Controllers
                     client.Send(message);
                     return HttpStatusCode.OK;
                }
-               catch(Exception e)
+               catch
                {
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     return HttpStatusCode.BadRequest;
                }
+          }
+
+          [HttpPost("/pop3/gmail")]
+          public Email GetPOP3Emails(GetEmailsPayload email)
+          {
+               Pop3Client pop = new();
+               pop.Connect("smtp.gmail.com", 995, true);
+               pop.Authenticate(email.Email, email.Password);
+               var message = pop.GetMessage(email.EmailNumber);
+
+               var mailMessage = message.ToMailMessage();
+
+               Email emailData = new()
+               {
+                    From = mailMessage.From.Address,
+                    Subject = mailMessage.Subject,
+                    Message = mailMessage.Body
+               };
+
+               return emailData;
           }
      }
 
