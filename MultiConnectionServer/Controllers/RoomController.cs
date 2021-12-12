@@ -5,11 +5,11 @@ namespace MultiConnectionServer.Controllers
 {
      [ApiController]
      [Route("[controller]")]
-     public class Room : ControllerBase
+     public class RoomController : ControllerBase
      {
           private ChatRoomSocketService _chatRoomSocketService;
 
-          public Room()
+          public RoomController()
           {
                _chatRoomSocketService = new ChatRoomSocketService();
           }
