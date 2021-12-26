@@ -22,15 +22,28 @@ namespace MultiConnectionServer
           {
 
                services.AddControllers();
+               services.AddSignalR();
                services.AddSwaggerGen(c =>
                {
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "MultiConnectionServer", Version = "v1" });
+               });
+               services.AddCors(options =>
+               {
+                    options.AddPolicy("ClientPermission", policy =>
+                    {
+                         policy.AllowAnyHeader()
+                             .AllowAnyMethod()
+                             .WithOrigins("http://localhost:3000")
+                             .AllowCredentials();
+                    });
                });
           }
 
           // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
           public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
           {
+               app.UseCors("ClientPermission");
+
                if (env.IsDevelopment())
                {
                     app.UseDeveloperExceptionPage();
@@ -45,13 +58,12 @@ namespace MultiConnectionServer
 
                app.UseRouting();
 
-               app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader());
-
                app.UseAuthorization();
 
                app.UseEndpoints(endpoints =>
                {
                     endpoints.MapControllers();
+                    endpoints.MapHub<ChatHub>("/hubs/chat");
                });
           }
      }

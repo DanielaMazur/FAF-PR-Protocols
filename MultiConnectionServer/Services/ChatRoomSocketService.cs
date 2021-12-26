@@ -27,7 +27,7 @@ namespace MultiConnectionServer.Services
           public void RemoveSocketFromRoom(string socketId, string roomName)
           {
                var room = _rooms.Find(room => room.Name == roomName);
-               room.Sockets.TryRemove(socketId, out _);
+               room?.Sockets?.TryRemove(socketId, out _);
           }
 
           public void AddSocketToRoom(WebSocket socket, string socketId, string roomName)
